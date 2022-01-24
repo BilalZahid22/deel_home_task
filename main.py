@@ -1,4 +1,4 @@
-# import Python's built-in JSON library
+
 import json
 
 from psycopg2._json import Json
@@ -93,4 +93,3 @@ if __name__ == '__main__':
     task_2()
     task_3()
     task_4()
-    print('')

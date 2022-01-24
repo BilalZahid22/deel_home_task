@@ -7,24 +7,19 @@ from scripts import ddl_scripts,task_scripts
 
 
 def get_connection():
-    conn = psycopg2.connect(
-        host="localhost",
-        database="Testing",
-        user="postgres",
-        port="5434",
-        password="1122")
-    cursor = conn.cursor()
+    try:
+        conn = psycopg2.connect(
+            host="localhost",
+            database="Testing",
+            user="postgres",
+            port="5440",
+            password="1122")
+        cursor = conn.cursor()
 
-    return cursor, conn
-
-
-def run_ddl(query):
-    cursor, conn = get_connection()
-
-    cursor.execute(query)
-
-    conn.commit()
-    cursor.close()
+        return cursor, conn
+    except (Exception, psycopg2.Error) as error:
+        print("Error while getting connection from PostgreSQL", error)
+        return '', ''
 
 def fetch_result(query):
     try:
@@ -38,15 +33,25 @@ def fetch_result(query):
         return result_db
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
+        return []
+
+def run_ddl(query):
+    cursor, conn = get_connection()
+    if cursor and conn:
+        cursor.execute(query)
+        conn.commit()
+        cursor.close()
+
+
 
 
 def ingest_records(query):
     cursor, conn = get_connection()
+    if cursor and conn:
+        cursor.execute(query)
 
-    cursor.execute(query)
-
-    conn.commit()
-    cursor.close()
+        conn.commit()
+        cursor.close()
 
 
 def create_ddl():
@@ -58,6 +63,4 @@ def create_ddl():
     run_ddl(ddl_scripts.sp_contracts)
 
 
-# fetch_result(task_scripts.task_1)
-#
 
